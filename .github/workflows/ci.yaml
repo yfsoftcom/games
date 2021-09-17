@@ -1,0 +1,16 @@
+name: Product PipeLine
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: manyuanrong/setup-ossutil@v2.0
+      with:
+        endpoint: "oss-cn-shanghai.aliyuncs.com"
+        access-key-id: ${{ secrets.ALICLOUD_ACCESS_KEY }}
+        access-key-secret: ${{ secrets.ALICLOUD_SECRET_KEY }}
+    - run: cd apps && ossutil cp -rf . oss://bucket-website-game-yunjiaiot-cn
