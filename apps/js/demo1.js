@@ -2,6 +2,7 @@ const playground = document.getElementById('playground');
 const ctx = playground.getContext('2d');
 
 const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const MOVE_SPEED = IS_MOBILE? 15: 20;
 const WIDTH = window.innerWidth
 || document.documentElement.clientWidth
 || document.body.clientWidth;
@@ -55,11 +56,11 @@ class Player {
         const dx = this.x - mouse.x;
         const dy = this.y - mouse.y;
         if (mouse.x != this.x){
-            this.x -= dx/20;
+            this.x -= dx/MOVE_SPEED;
             this.moving = true;
         }
         if (mouse.y != this.y){
-            this.y -= dy/20;
+            this.y -= dy/MOVE_SPEED;
             this.moving = true;
         }
         if (this.x < 0) this.x = 0;
