@@ -15,6 +15,7 @@
 html, body {
   overflow-x: hidden;
   overflow-y: hidden;
+  background: url('../assets/waves_glow_blue.png');
 }
 body {
   width: 100vw;
@@ -22,7 +23,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, lightblue, darkblue);
   position: relative;
 }
 .container {
@@ -31,8 +31,6 @@ body {
 #playground {
   width: 100vw;
   /* height: 100vh; */
-  border: 4px solid black;
-  background: linear-gradient(to bottom, lightblue, darkblue);
 }
 footer {
   font-family: monospace;

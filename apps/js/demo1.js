@@ -8,7 +8,7 @@ const WIDTH = window.innerWidth
 || document.body.clientWidth;
 
 playground.width = WIDTH;
-playground.height = WIDTH/8*5;
+playground.height = window.innerHeight;
 let score = 0;
 let gameFrame = 0;
 ctx.font = '50px Georgia';
