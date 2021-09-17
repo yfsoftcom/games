@@ -25,8 +25,7 @@ body {
   position: relative;
 }
 .container {
-  width: 800px;
-  height: 500px;
+  width: 100vw;
 }
 #playground {
   width: 100vw;
@@ -40,7 +39,7 @@ footer {
   width: 100%;
   color: white;
   font-size: 15px;
-  text-shadow: 1px 1px 1px #737373; 
+  text-shadow: 1px 1px 1px #737373;
   background: rgba(0,0,0,0.5);
   left: 0;
   bottom: 0;
