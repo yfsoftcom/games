@@ -2,7 +2,6 @@ const playground = document.getElementById('playground');
 const ctx = playground.getContext('2d');
 
 const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-alert(IS_MOBILE);
 const WIDTH = window.innerWidth
 || document.documentElement.clientWidth
 || document.body.clientWidth;
@@ -21,12 +20,14 @@ const mouse = {
     click: false
 }
 playground.addEventListener(IS_MOBILE? 'touchmove': 'mousemove', function(e){
+    const x = IS_MOBILE? e.targetTouches[0].clientX: e.x;
+    const y = IS_MOBILE? e.targetTouches[0].clientY: e.y;
     mouse.click = true;
-    mouse.x = e.x - canvasPosition.left;
-    mouse.y = e.y - canvasPosition.top;
+    mouse.x = x - canvasPosition.left;
+    mouse.y = y - canvasPosition.top;
     e.preventDefault();
 }, false);
-window.addEventListener(IS_MOBILE? 'touchend': 'mouseup', function(e){
+playground.addEventListener(IS_MOBILE? 'touchend': 'mouseup', function(e){
     mouse.click = false;
     e.preventDefault();
 }, false);
