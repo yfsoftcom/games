@@ -1,8 +1,12 @@
+import './css/common.css';
+import pop2 from './assets/pop2.png';
+import Player from './objects/player';
+
 const playground = document.getElementById('playground');
 const ctx = playground.getContext('2d');
 
 const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-const MOVE_SPEED = IS_MOBILE? 15: 20;
+const MOVE_SPEED = IS_MOBILE? 15: 10;
 const WIDTH = window.innerWidth
 || document.documentElement.clientWidth
 || document.body.clientWidth;
@@ -33,87 +37,18 @@ playground.addEventListener(IS_MOBILE? 'touchend': 'mouseup', function(e){
     e.preventDefault();
 }, false);
 
-// Player
-const playerLeft = new Image();
-playerLeft.src = './assets/fish-swim-left.png';
-const playerRight = new Image();
-playerRight.src = './assets/fish-swim-right.png';
 
-class Player {
-    constructor(){
-        this.x = playground.width;
-        this.y = playground.height/2;
-        this.radius = 50;
-        //this.height = 20;
-        this.angle = 0;
-        this.frameX = 0;
-        this.frameY = 0;
-        this.frame = 0;
-        this.spriteWidth = 160;
-        this.spriteHeight = 105;
-    }
-    update(){
-        const dx = this.x - mouse.x;
-        const dy = this.y - mouse.y;
-        if (mouse.x != this.x){
-            this.x -= dx/MOVE_SPEED;
-            this.moving = true;
-        }
-        if (mouse.y != this.y){
-            this.y -= dy/MOVE_SPEED;
-            this.moving = true;
-        }
-        if (this.x < 0) this.x = 0;
-        if (this.x > playground.width) this.x = playground.width;
-        if (this.y < 50) this.y = 50;
-        if (this.y > playground.height) this.y = playground.height;
-        let theta = Math.atan2(dy,dx);
-        this.angle = theta;
-    }
-    draw(){
-        if (mouse.click){
-            ctx.lineWidth = 0.2;
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.stroke();
-        }
-        if (gameFrame % 10 == 0) {
-            this.frame++;
-            if (this.frame >= 12) this.frame = 0;
-            if ( this.frame == 3 ||  this.frame == 7 ||  this.frame == 11) {
-                this.frameX = 0;
-            } else this.frameX++;
-            if (this.frame < 3){
-                this.frameY = 0;
-            } else if (this.frame < 7){
-                this.frameY = 1;
-            } else if (this.frame < 11){
-                this.frameY = 2;
-            } else this.frameY = 0;
-        }
-      
-        ctx.fillStyle = 'black';
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
-        //ctx.beginPath();
-        //ctx.arc(0, 0, this.radius, 0, Math.PI * 360);
-        //ctx.fill();
-        if (this.x >= mouse.x){
-            ctx.drawImage(playerLeft, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, 0 - 60, 0 - 45, this.spriteWidth * 0.8, this.spriteHeight * 0.8);
-        } else {
-            ctx.drawImage(playerRight, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, 0 - 60, 0 - 45, this.spriteWidth * 0.8, this.spriteHeight * 0.8);
-        }
-        ctx.restore();
-    }
-}
-const player = new Player();
+const player = new Player({
+  playground,
+  moveSpeed: MOVE_SPEED,
+  mouse,
+  gameFrame,
+});
 
 // Bubbles
 const bubblesArray = [];
 const bubble = new Image();
-bubble.src = './assets/pop2.png';
+bubble.src = pop2;
 class Bubble {
     constructor(){
         this.x = Math.random() * playground.width;
@@ -275,16 +210,19 @@ function init2() {
 console.log(bubbleTextArray);
 /** bubble text end **/
 
+let lastTime = 0;
 // animation loop
-function animate(){
+function animate(timestamp){
+    const deltaTime = timestamp - lastTime;
+    lastTime = timestamp;
     ctx.clearRect(0, 0, playground.width, playground.height);
     for (let i = 0; i < bubbleTextArray.length; i++){
-        bubbleTextArray[i].draw();
-        bubbleTextArray[i].update();
+        bubbleTextArray[i].draw(deltaTime);
+        bubbleTextArray[i].update(ctx);
     }
     handleBubbles();
-    player.update();
-    player.draw();
+    player.update(deltaTime);
+    player.draw(ctx);
     ctx.fillStyle = 'rgba(34,147,214,1)';
     ctx.font = '20px Georgia';
     ctx.fillStyle = 'rgba(255,255,255,0.8)';
@@ -294,7 +232,7 @@ function animate(){
     gameFrame += 1;
     requestAnimationFrame(animate);
 }
-animate();
+animate(0);
 
 window.addEventListener('resize', function(){
   canvasPosition = playground.getBoundingClientRect();

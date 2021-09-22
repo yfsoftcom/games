@@ -8,9 +8,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Use Node.js 14
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14
+    - run: cd apps && yarn
+    - run: cd apps && yarn build
+      env:
+        NODE_ENV: production
     - uses: manyuanrong/setup-ossutil@v2.0
       with:
         endpoint: "oss-cn-shanghai.aliyuncs.com"
         access-key-id: ${{ secrets.ALICLOUD_ACCESS_KEY }}
         access-key-secret: ${{ secrets.ALICLOUD_SECRET_KEY }}
-    - run: cd apps && ossutil cp -rf . oss://bucket-website-game-yunjiaiot-cn
+    - run: cd apps/dist && ossutil cp -rf . oss://bucket-website-game-yunjiaiot-cn
